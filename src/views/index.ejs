@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endpoints y Descripciones</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4a90e2;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #333;
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+
+    details {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    details summary {
+      font-weight: bold;
+      cursor: pointer;
+      color: #4a90e2;
+    }
+
+    details summary:hover {
+      color: #357abd;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    pre {
+      background-color: #f8f8f8;
+      border-left: 4px solid #4a90e2;
+      padding: 10px;
+      border-radius: 3px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      /* Allows text wrapping */
+    }
+
+    code {
+      font-family: monospace;
+      color: #e94e77;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Endpoints y Descripciones</h1>
+
+  <h2>Endpoints de Autenticación</h2>
+  <details>
+    <summary><code>POST /auth/login</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Autenticar usuario y generar un token JWT.</li>
+      <li><strong>Instrucciones:</strong> Enviar el número de usuario y la contraseña en el cuerpo de la solicitud.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+{
+  "numero_usuario": 12345,
+  "contrasena": "password123"
+}
+        </pre>
+      </li>
+      <li><strong>Respuesta de éxito:</strong>
+        <pre>
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzLCJub21icmVfdXN1YXJpbzEyMzQiLCJyb2xlX2lkIjoyLCJpYXQiOjE2NTc3MjAwMDB9.MH7n-9Ms2G9mA8ytYZk3-eX3e4q5s5NYFmf6M3O9oH8",
+  "id": 123,
+  "numero_usuario": 12345,
+  "role_id": 2
+}
+        </pre>
+      </li>
+      <li><strong>Respuesta de error:</strong>
+        <pre>
+{
+  "error": "Número de usuario o contraseña incorrectos"
+}
+        </pre>
+      </li> 
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>POST /auth/registro</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Registrar un nuevo usuario.</li>
+      <li><strong>Instrucciones:</strong> Enviar los datos del nuevo usuario (nombre, apellido, correo institucional,
+        número de usuario y contraseña) en el cuerpo de la solicitud.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+  {
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "correo_institucional": "juan.perez@institucion.edu",
+    "numero_usuario": 12345,
+    "contrasena": "password123",
+    "carrera_id": 1
+  }
+        </pre>
+      </li>
+      <li><strong>Respuesta de éxito:</strong>
+        <pre>
+{
+  "message": "Usuario registrado exitosamente"
+}
+        </pre>
+      </li>
+      <li><strong>Respuesta de error:</strong>
+        <pre>
+{
+  "error": "El correo institucional ya está registrado"
+}
+        </pre>
+        <pre>
+{
+  "error": "El número de usuario ya está en uso"
+}
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <h2>Endpoints de Carreras</h2>
+  <details>
+    <summary><code>GET /carreras</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas las carreras.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+[
+  {
+    "id": 1,
+    "nombre_carrera": "Ingeniería Informática",
+    "descripcion": "Descripción de la carrera",
+    "facultad": "Facultad de Ingeniería"
+  },
+  ...
+]
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>GET /carreras/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una carrera por su ID.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el ID de la carrera en la URL.</li>
+      <li><strong>Ejemplo de solicitud:</strong> <code>/carreras/1</code></li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "id": 1,
+  "nombre_carrera": "Ingeniería Informática",
+  "descripcion": "Descripción de la carrera",
+  "facultad": "Facultad de Ingeniería"
+}
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>POST /carreras</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Crear una nueva carrera.</li>
+      <li><strong>Instrucciones:</strong> Enviar los datos de la nueva carrera (nombre_carrera, descripcion, facultad)
+        en el cuerpo de la solicitud.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+{
+  "nombre_carrera": "Ingeniería Informática",
+  "descripcion": "Descripción de la carrera",
+  "facultad": "Facultad de Ingeniería"
+}
+        </pre>
+      </li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "message": "Carrera creada exitosamente"
+}
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>PUT /carreras/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Actualizar una carrera existente.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el ID de la carrera en la URL y enviar los nuevos datos de la
+        carrera (nombre_carrera, descripcion, facultad) en el cuerpo de la solicitud.</li>
+      <li><strong>Ejemplo de solicitud:</strong> <code>/carreras/1</code>
+        <pre>
+{
+  "nombre_carrera": "Ingeniería Informática",
+  "descripcion": "Nueva descripción de la carrera",
+  "facultad": "Facultad de Ingeniería"
+}
+        </pre>
+      </li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "message": "Carrera actualizada exitosamente"
+}
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>DELETE /carreras/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Eliminar una carrera existente.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el ID de la carrera en la URL.</li>
+      <li><strong>Ejemplo de solicitud:</strong> <code>/carreras/1</code></li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "message": "Carrera eliminada exitosamente"
+}
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+</body>
+
+</html>
