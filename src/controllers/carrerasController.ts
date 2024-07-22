@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import client from '../db';
+import client from '../servicios/db';
 
 interface Carrera {
   id: number;
@@ -11,10 +11,10 @@ interface Carrera {
 // Obtener todas las carreras
 export const getCarreras = async (req: Request, res: Response): Promise<void> => {
   try {
-    const resultSet = await client.execute("SELECT * FROM Carreras ORDER BY id ASC;");
+    const resultado = await client.execute("SELECT * FROM Carreras ORDER BY id ASC;");
 
-    if (Array.isArray(resultSet.rows)) {
-      const formattedData: Carrera[] = resultSet.rows.map((row: any) => ({
+    if (Array.isArray(resultado.rows)) {
+      const formattedData: Carrera[] = resultado.rows.map((row: any) => ({
         id: row[0],
         nombre_carrera: row[1],
         descripcion: row[2],
@@ -35,13 +35,13 @@ export const getCarreraById = async (req: Request, res: Response): Promise<void>
   const { id } = req.params;
 
   try {
-    const resultSet = await client.execute({
+    const resultado = await client.execute({
       sql: "SELECT * FROM Carreras WHERE id = ?",
       args: [id]
     });
 
-    if (Array.isArray(resultSet.rows)) {
-      const formattedData: Carrera[] = resultSet.rows.map((row: any) => ({
+    if (Array.isArray(resultado.rows)) {
+      const formattedData: Carrera[] = resultado.rows.map((row: any) => ({
         id: row[0],
         nombre_carrera: row[1],
         descripcion: row[2],

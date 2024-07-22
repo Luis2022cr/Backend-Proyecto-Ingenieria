@@ -105,7 +105,7 @@
   "error": "Número de usuario o contraseña incorrectos"
 }
         </pre>
-      </li> 
+      </li>
     </ul>
   </details>
 
@@ -255,6 +255,222 @@
       </li>
     </ul>
   </details>
+
+  <h2>Endpoints de Estados</h2>
+  <details>
+    <summary><code>GET /estados</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas los estados.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+[
+  {
+    "id": 1,
+    "nombre_estado": "Aprobado",
+    "descripcion": "Descripción de estado"
+  },
+  ...
+]
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <h2>Endpoints de Ambitos</h2>
+  <details>
+    <summary><code>GET /ambitos</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas los ambitos del articulo 140.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+[
+  {
+    "id": 1,
+    "nombre_ambito": "Deportivo",
+    "descripcion": "Area deportiva"
+  },
+  ...
+]
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+
+  <h2>Endpoints de Usuarios</h2>
+  <details>
+    <summary><code>GET /usuarioCoordinador</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas los usarios con el rol de Coordinador.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+          [
+          {
+            "id": 3,
+            "nombre": "Carlos",
+            "apellido": "Hernández",
+            "correo_institucional": "carlos.hernandez@unah.edu.hn",
+            "numero_usuario": 1001,
+            "carrera_nombre": "Desarrollo Local"
+          }
+        ]
+        </pre>
+      </li>
+    </ul>
+  </details>
+
+  <h2>Endpoints de Actividades</h2>
+  <details>
+    <summary><code>GET /actividades</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+[
+{
+  "id": 4,
+  "nombre_actividad": "Nueva Actividad",
+  "objetivos": "Objetivo de la actividad",
+  "actividades_principales": "Actividades principales",
+  "descripcion": "Descripción de la actividad",
+  "ubicacion": "Ubicación de la actividad",
+  "carrera": "Ingeniería en Sistemas",
+  "ambito": "Deportivo",
+  "coordinador": "María González",
+  "estudiante": "Juan Pérez",
+  "horas_art140": 10,
+  "cupos": 20,
+  "cupos_disponibles": 20,
+  "fecha": "2024-07-21T00:00:00.000Z",
+  "hora_inicio": "08:00",
+  "hora_final": "10:00",
+  "fecha_entrega": "2024-07-22T04:39:00.467Z",
+  "estado": "En Revision",
+  "observaciones": "Observaciones",
+  "informe": null
+},
+  ...
+]
+      </pre>
+      </li>
+    </ul>
+  </details>
+
+  <!-- <details>
+    <summary><code>GET /actividades/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una actividad por ID.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "id": 1,
+  "nombre_actividad": "Actividad A",
+  "objetivos": "Objetivo A",
+  "actividades_principales": "Principal A",
+  "descripcion": "Descripción A",
+  "ubicacion": "Ubicación A",
+  "carrera_id": 1,
+  "ambito_id": 1,
+  "coordinador_id": 1,
+  "estudiante_id": 1,
+  "horas_art140": 10,
+  "cupos": 20,
+  "cupos_disponibles": 15,
+  "fecha": "2024-07-21T00:00:00.000Z",
+  "hora_inicio": "08:00",
+  "hora_final": "10:00",
+  "fecha_entrega": "2024-07-22T00:00:00.000Z",
+  "estado_id": 1,
+  "observaciones": "Observaciones A",
+  "informe": "Informe A"
+}
+      </pre>
+      </li>
+    </ul>
+  </details> -->
+
+  <details>
+    <summary><code>POST /actividades</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Crear una nueva actividad.</li>
+      <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los detalles de la actividad.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+{
+  "nombre_actividad": "Nueva Actividad",
+  "objetivos": "Objetivo de la actividad",
+  "actividades_principales": "Actividades principales",
+  "descripcion": "Descripción de la actividad",
+  "ubicacion": "Ubicación de la actividad",
+  "carrera_id": 1,
+  "ambito_id": 1,
+  "coordinador_id": 1,
+  "estudiante_id": 1,
+  "horas_art140": 10,
+  "cupos": 20,
+  "fecha": "2024-07-21T00:00:00.000Z",
+  "hora_inicio": "08:00",
+  "hora_final": "10:00",
+  "observaciones": "Observaciones"
+}
+      </pre>
+      </li>
+    </ul>
+  </details>
+  <!-- 
+  <details>
+    <summary><code>PUT /actividades/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Actualizar una actividad existente por ID.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta y un cuerpo JSON con los
+        detalles actualizados.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+{
+  "nombre_actividad": "Actividad Actualizada",
+  "objetivos": "Objetivo actualizado",
+  "actividades_principales": "Actividades principales actualizadas",
+  "descripcion": "Descripción actualizada",
+  "ubicacion": "Ubicación actualizada",
+  "carrera_id": 1,
+  "ambito_id": 1,
+  "coordinador_id": 1,
+  "estudiante_id": 1,
+  "horas_art140": 10,
+  "cupos": 20,
+  "cupos_disponibles": 15,
+  "fecha": "2024-07-21T00:00:00.000Z",
+  "hora_inicio": "08:00",
+  "hora_final": "10:00",
+  "fecha_entrega": "2024-07-22T00:00:00.000Z",
+  "estado_id": 1,
+  "observaciones": "Observaciones actualizadas",
+  "informe": "Informe actualizado"
+}
+      </pre>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>DELETE /actividades/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Eliminar una actividad por ID.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "message": "Actividad eliminada con éxito"
+}
+      </pre>
+      </li>
+    </ul>
+  </details> -->
 
 </body>
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import client from '../db';
+import client from '../servicios/db';
 
 interface User {
     id: number;
