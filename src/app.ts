@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 // Configuración del rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 500, // Limita cada IP a 100 solicitudes por ventana
+  max: 150, // Limita cada IP a 100 solicitudes por ventana
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -39,8 +39,18 @@ app.use(helmet());
 app.use(limiter);
 app.use(speedLimiter);
 
+// Lista de orígenes permitidos
+const allowedOrigins = [process.env.URL_FRONTEND, process.env.URL_LOCAL];
+
 app.use(cors({
-  origin: process.env.URL_FRONTEND || process.env.URL_LOCAL,
+  origin: function (origin, callback) {
+    // Comprobar si el origen está en la lista de orígenes permitidos
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
