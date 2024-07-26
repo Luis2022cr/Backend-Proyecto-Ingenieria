@@ -5,8 +5,9 @@ import { authenticateJWT } from '../Middlewares/authMiddleware';
 import { getCarreras, getCarreraById, createCarrera, updateCarrera, deleteCarrera } from '../controllers/carrerasController';
 import { getAmbito } from '../controllers/ambitosController';
 import { getEstados } from '../controllers/estadosController';
-import { createActividad, getActividades } from '../controllers/actividadesController';
+import { createActividad, getActividades, updateActividad } from '../controllers/actividadesController';
 import { getUsuariosRolCoordinador } from '../controllers/usuariosController';
+import { getParticipantesByActividad, getActividadesByUsuario, addParticipante, removeParticipante } from '../controllers/actividadesParticipantesController';
 
 const router: Router = Router();
 
@@ -32,5 +33,12 @@ router.get('/usuarioCoordinador', getUsuariosRolCoordinador)
 //Endponit de Actividades
 router.get('/actividades', getActividades);
 router.post('/actividades', createActividad);
+router.put('/actividades/:id', updateActividad);
+
+//Enpoint de actividades participantes
+router.get('/actividades/:id/participantes', getParticipantesByActividad);
+router.get('/usuarios/:id/actividades', getActividadesByUsuario);
+router.post('/participantes', addParticipante);
+router.put('/actividades-participantes', removeParticipante);
 
 export default router;

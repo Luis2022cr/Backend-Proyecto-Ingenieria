@@ -123,6 +123,7 @@
     "correo_institucional": "juan.perez@institucion.edu",
     "numero_usuario": 12345,
     "contrasena": "password123",
+    "confirmacionContrasena": "password123",
     "carrera_id": 1
   }
         </pre>
@@ -323,154 +324,281 @@
   </details>
 
   <h2>Endpoints de Actividades</h2>
-  <details>
-    <summary><code>GET /actividades</code></summary>
-    <ul>
-      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
-      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
-      <li><strong>Ejemplo de respuesta:</strong>
-        <pre>
+
+<details>
+  <summary><code>GET /actividades</code></summary>
+  <ul>
+    <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
+    <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+    <li><strong>Ejemplo de respuesta:</strong>
+      <pre>
 [
-{
-  "id": 4,
-  "nombre_actividad": "Nueva Actividad",
-  "objetivos": "Objetivo de la actividad",
-  "actividades_principales": "Actividades principales",
-  "descripcion": "Descripción de la actividad",
-  "ubicacion": "Ubicación de la actividad",
-  "carrera": "Ingeniería en Sistemas",
-  "ambito": "Deportivo",
-  "coordinador": "María González",
-  "estudiante": "Juan Pérez",
-  "horas_art140": 10,
-  "cupos": 20,
-  "cupos_disponibles": 20,
-  "fecha": "2024-07-21T00:00:00.000Z",
-  "hora_inicio": "08:00",
-  "hora_final": "10:00",
-  "fecha_entrega": "2024-07-22T04:39:00.467Z",
-  "estado": "En Revision",
-  "observaciones": "Observaciones",
-  "informe": null
-},
+  {
+    "id": 4,
+    "nombre_actividad": "Nueva Actividad",
+    "objetivos": "Objetivo de la actividad",
+    "actividades_principales": "Actividades principales",
+    "descripcion": "Descripción de la actividad",
+    "ubicacion": "Ubicación de la actividad",
+    "carrera": "Ingeniería en Sistemas",
+    "ambito": "Deportivo",
+    "coordinador": "María González",
+    "estudiante": "Juan Pérez",
+    "horas_art140": 10,
+    "cupos": 20,
+    "cupos_disponibles": 20,
+    "fecha": "2024-07-21T00:00:00.000Z",
+    "hora_inicio": "08:00",
+    "hora_final": "10:00",
+    "fecha_entrega": "2024-07-22T04:39:00.467Z",
+    "estado": "En Revisión",
+    "observaciones": "Observaciones",
+    "informe": null
+  },
   ...
 ]
       </pre>
-      </li>
-    </ul>
-  </details>
+    </li>
+  </ul>
+</details>
 
-  <!-- <details>
-    <summary><code>GET /actividades/:id</code></summary>
+<details>
+  <summary><code>POST /actividades</code></summary>
+  <ul>
+    <li><strong>Descripción:</strong> Crear una nueva actividad.</li>
+    <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los detalles de la actividad.</li>
+    <li><strong>Ejemplo de solicitud:</strong>
+      <pre>
+        {
+          "nombre_actividad": "Taller de Desarrollo Web",
+          "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+          "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+          "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+          "ubicacion": "Aula 101, Edificio Central",
+          "carrera_id": 2,
+          "ambito_id": 3,
+          "coordinador_id": 1,
+          "estudiante_id": 5,
+          "horas_art140": 20,
+          "cupos": 30,
+          "fecha": "2024-08-01T09:00:00",
+          "hora_inicio": "09:00",
+          "hora_final": "17:00",
+          "observaciones": "Se requiere que los estudiantes traigan laptop."
+        }
+      </pre>
+    </li>
+  </ul>
+</details>
+
+<details>
+  <summary><code>PUT /actividades/:id</code></summary>
+  <ul>
+    <li><strong>Descripción:</strong> Actualizar una actividad existente por ID.</li>
+    <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta y un cuerpo JSON con los detalles actualizados.</li>
+    <li><strong>Ejemplo de solicitud:</strong>
+      <pre>
+        {
+          "nombre_actividad": "Taller de Desarrollo Web",
+          "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+          "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+          "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+          "ubicacion": "Aula 101, Edificio Central",
+          "carrera_id": 2,
+          "ambito_id": 3,
+          "coordinador_id": 1,
+          "estudiante_id": 5,
+          "horas_art140": 20,
+          "cupos": 30,
+          "fecha": "2024-08-01T09:00:00",
+          "hora_inicio": "09:00",
+          "hora_final": "17:00",
+          "observaciones": "Se requiere que los estudiantes traigan laptop."
+        }
+      </pre>
+    </li>
+  </ul>
+</details>
+
+
+  <h2>Endpoints de ActividadesParticipantes</h2>
+
+  <details>
+    <summary><code>GET /actividades/:id/participantes</code></summary>
     <ul>
-      <li><strong>Descripción:</strong> Obtener una actividad por ID.</li>
-      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta.</li>
+      <li><strong>Descripción:</strong> Obtener una lista de todos los participantes de una actividad específica.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar la actividad.
+      </li>
       <li><strong>Ejemplo de respuesta:</strong>
         <pre>
-{
-  "id": 1,
-  "nombre_actividad": "Actividad A",
-  "objetivos": "Objetivo A",
-  "actividades_principales": "Principal A",
-  "descripcion": "Descripción A",
-  "ubicacion": "Ubicación A",
-  "carrera_id": 1,
-  "ambito_id": 1,
-  "coordinador_id": 1,
-  "estudiante_id": 1,
-  "horas_art140": 10,
-  "cupos": 20,
-  "cupos_disponibles": 15,
-  "fecha": "2024-07-21T00:00:00.000Z",
-  "hora_inicio": "08:00",
-  "hora_final": "10:00",
-  "fecha_entrega": "2024-07-22T00:00:00.000Z",
-  "estado_id": 1,
-  "observaciones": "Observaciones A",
-  "informe": "Informe A"
-}
-      </pre>
-      </li>
-    </ul>
-  </details> -->
-
-  <details>
-    <summary><code>POST /actividades</code></summary>
-    <ul>
-      <li><strong>Descripción:</strong> Crear una nueva actividad.</li>
-      <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los detalles de la actividad.</li>
-      <li><strong>Ejemplo de solicitud:</strong>
-        <pre>
-{
-  "nombre_actividad": "Nueva Actividad",
-  "objetivos": "Objetivo de la actividad",
-  "actividades_principales": "Actividades principales",
-  "descripcion": "Descripción de la actividad",
-  "ubicacion": "Ubicación de la actividad",
-  "carrera_id": 1,
-  "ambito_id": 1,
-  "coordinador_id": 1,
-  "estudiante_id": 1,
-  "horas_art140": 10,
-  "cupos": 20,
-  "fecha": "2024-07-21T00:00:00.000Z",
-  "hora_inicio": "08:00",
-  "hora_final": "10:00",
-  "observaciones": "Observaciones"
-}
-      </pre>
-      </li>
-    </ul>
-  </details>
-  <!-- 
-  <details>
-    <summary><code>PUT /actividades/:id</code></summary>
-    <ul>
-      <li><strong>Descripción:</strong> Actualizar una actividad existente por ID.</li>
-      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta y un cuerpo JSON con los
-        detalles actualizados.</li>
-      <li><strong>Ejemplo de solicitud:</strong>
-        <pre>
-{
-  "nombre_actividad": "Actividad Actualizada",
-  "objetivos": "Objetivo actualizado",
-  "actividades_principales": "Actividades principales actualizadas",
-  "descripcion": "Descripción actualizada",
-  "ubicacion": "Ubicación actualizada",
-  "carrera_id": 1,
-  "ambito_id": 1,
-  "coordinador_id": 1,
-  "estudiante_id": 1,
-  "horas_art140": 10,
-  "cupos": 20,
-  "cupos_disponibles": 15,
-  "fecha": "2024-07-21T00:00:00.000Z",
-  "hora_inicio": "08:00",
-  "hora_final": "10:00",
-  "fecha_entrega": "2024-07-22T00:00:00.000Z",
-  "estado_id": 1,
-  "observaciones": "Observaciones actualizadas",
-  "informe": "Informe actualizado"
-}
+          {
+            "id": 2,
+            "nombre_actividad": "Taller de Desarrollo Web",
+            "fecha": "2024-08-01T09:00:00",
+            "participantes": [
+              {
+                "id": 20182100278,
+                "nombre": "Jose Luis",
+                "apellido": "Contreras",
+                "numero_usuario": 215430278,
+                "correo_institucional": "jcont@unah.hn",
+                "carrera_nombre": "Ingeniería en Sistemas"
+              },
+              {
+                "id": 20182100278,
+                "nombre": "Jose Luis",
+                "apellido": "Contreras",
+                "numero_usuario": 201821008,
+                "correo_institucional": "cntres@unah.hn",
+                "carrera_nombre": "Ingeniería en Sistemas"
+              },
+              {
+                "id": 20182100278,
+                "nombre": "Jose Luis",
+                "apellido": "Contreras",
+                "numero_usuario": 20268778,
+                "correo_institucional": "jcontreras@unah.hn",
+                "carrera_nombre": "Ingeniería en Sistemas"
+              }
+            ]
+          }
       </pre>
       </li>
     </ul>
   </details>
 
   <details>
-    <summary><code>DELETE /actividades/:id</code></summary>
+    <summary><code>GET /usuarios/:id/actividades</code></summary>
     <ul>
-      <li><strong>Descripción:</strong> Eliminar una actividad por ID.</li>
-      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta.</li>
+      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades en las que un usuario específico está
+        participando.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar el usuario.
+      </li>
       <li><strong>Ejemplo de respuesta:</strong>
         <pre>
-{
-  "message": "Actividad eliminada con éxito"
-}
+        [
+        {
+          "id": 20182100278,
+          "nombre": "Jose Luis",
+          "apellido": "Contreras",
+          "correo_institucional": "jcontreras@unah.hn",
+          "actividades": [
+            {
+              "id": 1,
+              "nombre_actividad": "Taller ",
+              "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+              "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "ubicacion": "Aula 101, Edificio Central",
+              "carrera_id": 2,
+              "ambito_id": 3,
+              "coordinador_id": 1,
+              "estudiante_id": 5,
+              "horas_art140": 20,
+              "cupos": 30,
+              "cupos_disponibles": 30,
+              "fecha": "2024-08-01T09:00:00",
+              "hora_inicio": "09:00",
+              "hora_final": "17:00",
+              "fecha_entrega": "2024-07-25T16:29:23-06:00",
+              "estado_id": 1,
+              "observaciones": "Se requiere que los estudiantes traigan laptop.",
+              "informe": null
+            },
+            {
+              "id": 2,
+              "nombre_actividad": "Taller de Desarrollo Web",
+              "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+              "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "ubicacion": "Aula 101, Edificio Central",
+              "carrera_id": 2,
+              "ambito_id": 3,
+              "coordinador_id": 1,
+              "estudiante_id": 5,
+              "horas_art140": 20,
+              "cupos": 30,
+              "cupos_disponibles": 30,
+              "fecha": "2024-08-01T09:00:00",
+              "hora_inicio": "09:00",
+              "hora_final": "17:00",
+              "fecha_entrega": "2024-07-25T16:29:26-06:00",
+              "estado_id": 1,
+              "observaciones": "Se requiere que los estudiantes traigan laptop.",
+              "informe": null
+            },
+            .............
+          }
+        ]
       </pre>
       </li>
     </ul>
-  </details> -->
+  </details>
+
+  <details>
+    <summary><code>POST /participantes</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Añadir un participante a una actividad.</li>
+      <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los campos <code>id_usuario</code> e
+        <code>id_actividad</code>.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
+        {
+          "id_usuario": 3,
+          "id_actividad": 2
+        }
+      </pre>
+      </li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+        {
+          "message": "Participante agregado exitosamente"
+        }
+      </pre>
+      </li>
+    </ul>
+  </details>
+  <details>
+    <summary><code>PUT /actividades-participantes</code></summary>
+    <ul>
+        <li><strong>Descripción:</strong> Elimina la participación de un usuario específico en una actividad.</li>
+        <li><strong>Instrucciones:</strong> El cuerpo de la solicitud debe incluir el `id_usuario` y `id_actividad` para identificar al usuario y la actividad.</li>
+        <li><strong>Ejemplo de solicitud:</strong>
+            <pre>
+{
+  "id_usuario": 3,
+  "id_actividad": 2
+}
+            </pre>
+        </li>
+        <li><strong>Ejemplo de respuesta:</strong>
+            <pre>
+{
+  "message": "Participación eliminada exitosamente"
+}
+            </pre>
+        </li>
+        <li><strong>Posibles respuestas de error:</strong>
+            <ul>
+                <li><strong>400 Bad Request:</strong>
+                    <pre>
+{
+  "error": "id_usuario e id_actividad son requeridos"
+}
+                    </pre>
+                </li>
+                <li><strong>404 Not Found:</strong>
+                    <pre>
+{
+  "error": "Participación no encontrada"
+}
+                    </pre>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</details>
+
 
 </body>
 

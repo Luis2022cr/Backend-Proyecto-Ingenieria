@@ -15,7 +15,7 @@ interface User {
 }
 
 export const register = async (req: Request, res: Response): Promise<void> => {
-    const { nombre, apellido, correo_institucional, numero_usuario, contrasena, carrera_id } = req.body;
+    const { nombre, apellido, correo_institucional, numero_usuario, contrasena, confirmacionContrasena, carrera_id, role_id } = req.body;
 
     try {
         // Verificar si el correo institucional ya existe
@@ -40,16 +40,19 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        // Verificar si la contraseña y la confirmación coinciden
+        if (contrasena !== confirmacionContrasena) {
+            res.status(400).json({ error: 'Las contraseñas no coinciden' });
+            return;
+        }
+
         // Encriptar la contraseña
         const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-        // Establecer el role_id automáticamente
-        const role_id = 3;
-
         // Guardar el usuario en la base de datos
         await client.execute({
-            sql: 'INSERT INTO Usuarios (nombre, apellido, correo_institucional, numero_usuario, contrasena, role_id, carrera_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            args: [nombre, apellido, correo_institucional, numero_usuario, hashedPassword, role_id, carrera_id]
+            sql: 'INSERT INTO Usuarios (id, nombre, apellido, correo_institucional, numero_usuario, contrasena, role_id, carrera_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            args: [numero_usuario, nombre, apellido, correo_institucional, numero_usuario, hashedPassword, role_id, carrera_id]
         });
 
         res.status(201).json({ message: 'Usuario registrado exitosamente' });

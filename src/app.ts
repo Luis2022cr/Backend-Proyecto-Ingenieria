@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 // Configuración del rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limita cada IP a 100 solicitudes por ventana
+  max: 500, // Limita cada IP a 100 solicitudes por ventana
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -40,7 +40,7 @@ app.use(limiter);
 app.use(speedLimiter);
 
 app.use(cors({
-  origin: process.env.URL_FRONTEND,
+  origin: process.env.URL_FRONTEND || process.env.URL_LOCAL,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
