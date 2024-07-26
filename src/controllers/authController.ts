@@ -51,7 +51,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
         // Guardar el usuario en la base de datos
         await client.execute({
-            sql: 'INSERT INTO Usuarios (nombre, apellido, correo_institucional, numero_usuario, contrasena, role_id, carrera_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            sql: 'INSERT INTO Usuarios (nombre, apellido, correo_institucional, numero_usuario, contrasena, role_id, carrera_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
             args: [nombre, apellido, correo_institucional, numero_usuario, hashedPassword, role_id, carrera_id]
         });
 
