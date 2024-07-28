@@ -5,7 +5,7 @@ import { authenticateJWT } from '../Middlewares/authMiddleware';
 import { getCarreras, getCarreraById, createCarrera, updateCarrera, deleteCarrera } from '../controllers/carrerasController';
 import { getAmbito } from '../controllers/ambitosController';
 import { getEstados } from '../controllers/estadosController';
-import { createActividad, getActividades, updateActividad } from '../controllers/actividadesController';
+import { createActividad, getActividades, updateActividad, updateEstadoActividad } from '../controllers/actividadesController';
 import { getUsuariosRolCoordinador } from '../controllers/usuariosController';
 import { getParticipantesByActividad, getActividadesByUsuario, addParticipante, removeParticipante } from '../controllers/actividadesParticipantesController';
 
@@ -34,6 +34,7 @@ router.get('/usuarioCoordinador', getUsuariosRolCoordinador)
 router.get('/actividades', getActividades);
 router.post('/actividades', createActividad);
 router.put('/actividades/:id', updateActividad);
+router.patch('/actividades/:id/estado', updateEstadoActividad);
 
 //Enpoint de actividades participantes
 router.get('/actividades/:id/participantes', getParticipantesByActividad);

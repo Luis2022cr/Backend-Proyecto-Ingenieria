@@ -150,6 +150,115 @@
     </ul>
   </details>
 
+  <details>
+    <summary><code>POST /auth/generar-correo-recuperacion</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Solicitar un restablecimiento de contraseña para un usuario.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el correo institucional del usuario en el cuerpo de la solicitud.
+      </li>
+      <li><strong>Ejemplo de solicitud:</strong></li>
+      <pre>
+{
+  "correo_institucional": "ejemplo@unah.edu.hn"
+}
+      </pre>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+  "message": "Correo de restablecimiento de contraseña enviado"
+}
+        </pre>
+      </li>
+      <li><strong>Errores posibles:</strong>
+        <ul>
+          <li>400 Bad Request: <code>{ "error": "El correo institucional no está registrado" }</code></li>
+          <li>500 Internal Server Error:
+            <code>{ "error": "Error al solicitar el restablecimiento de contraseña" }</code>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>POST /auth/reset-password</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Restablecer la contraseña de un usuario utilizando el token proporcionado.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el token de restablecimiento y la nueva contraseña en el cuerpo
+        de la solicitud.</li>
+      <li><strong>Ejemplo de solicitud:</strong></li>
+      <pre>
+{
+"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+"nuevaContrasena": "nueva_contrasena123",
+"confirmacionContrasena": "nueva_contrasena123"
+}
+    </pre>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
+{
+"message": "Contraseña restablecida exitosamente"
+}
+      </pre>
+      </li>
+      <li><strong>Errores posibles:</strong>
+        <ul>
+          <li>400 Bad Request: <code>{ "error": "Las contraseñas no coinciden" }</code></li>
+          <li>400 Bad Request: <code>{ "error": "Token inválido o expirado" }</code></li>
+          <li>500 Internal Server Error: <code>{ "error": "Error al restablecer la contraseña" }</code></li>
+        </ul>
+      </li>
+    </ul>
+  </details>
+
+  <details>
+    <summary><code>POST /auth/cambiar-password</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Cambiar la contraseña del usuario autenticado.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar la contraseña actual, la nueva contraseña y la confirmación de la
+        nueva contraseña en el cuerpo de la solicitud. No es necesario proporcionar un token en los encabezados ya que
+        la autenticación se maneja mediante middleware.</li>
+      <li><strong>Ejemplo de solicitud:</strong></li>
+      <pre>
+POST /auth/cambiar-password
+Content-Type: application/json
+{
+"contrasenaActual": "contrasena_actual123",
+"nuevaContrasena": "nueva_contrasena123",
+"confirmacionContrasena": "nueva_contrasena123"
+}
+</pre>
+      <li><strong>Ejemplo de respuesta exitosa:</strong></li>
+      <pre>
+{
+"message": "Contraseña cambiada exitosamente"
+}
+</pre>
+      <li><strong>Errores posibles:</strong></li>
+      <ul>
+        <li><strong>400 Bad Request:</strong></li>
+        <pre>
+{
+"error": "Las contraseñas no coinciden"
+}
+</pre>
+        <li><strong>401 Unauthorized:</strong></li>
+        <pre>
+{
+"error": "Contraseña actual incorrecta"
+}
+</pre>
+        <li><strong>500 Internal Server Error:</strong></li>
+        <pre>
+{
+"error": "Error al cambiar la contraseña"
+}
+</pre>
+      </ul>
+    </ul>
+
+  </details>
+
   <h2>Endpoints de Carreras</h2>
   <details>
     <summary><code>GET /carreras</code></summary>
@@ -241,22 +350,6 @@
     </ul>
   </details>
 
-  <details>
-    <summary><code>DELETE /carreras/:id</code></summary>
-    <ul>
-      <li><strong>Descripción:</strong> Eliminar una carrera existente.</li>
-      <li><strong>Instrucciones:</strong> Proporcionar el ID de la carrera en la URL.</li>
-      <li><strong>Ejemplo de solicitud:</strong> <code>/carreras/1</code></li>
-      <li><strong>Ejemplo de respuesta:</strong>
-        <pre>
-{
-  "message": "Carrera eliminada exitosamente"
-}
-        </pre>
-      </li>
-    </ul>
-  </details>
-
   <h2>Endpoints de Estados</h2>
   <details>
     <summary><code>GET /estados</code></summary>
@@ -325,13 +418,13 @@
 
   <h2>Endpoints de Actividades</h2>
 
-<details>
-  <summary><code>GET /actividades</code></summary>
-  <ul>
-    <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
-    <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
-    <li><strong>Ejemplo de respuesta:</strong>
-      <pre>
+  <details>
+    <summary><code>GET /actividades</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
+      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
 [
   {
     "id": 4,
@@ -358,17 +451,17 @@
   ...
 ]
       </pre>
-    </li>
-  </ul>
-</details>
+      </li>
+    </ul>
+  </details>
 
-<details>
-  <summary><code>POST /actividades</code></summary>
-  <ul>
-    <li><strong>Descripción:</strong> Crear una nueva actividad.</li>
-    <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los detalles de la actividad.</li>
-    <li><strong>Ejemplo de solicitud:</strong>
-      <pre>
+  <details>
+    <summary><code>POST /actividades</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Crear una nueva actividad.</li>
+      <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los detalles de la actividad.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
         {
           "nombre_actividad": "Taller de Desarrollo Web",
           "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
@@ -387,17 +480,18 @@
           "observaciones": "Se requiere que los estudiantes traigan laptop."
         }
       </pre>
-    </li>
-  </ul>
-</details>
+      </li>
+    </ul>
+  </details>
 
-<details>
-  <summary><code>PUT /actividades/:id</code></summary>
-  <ul>
-    <li><strong>Descripción:</strong> Actualizar una actividad existente por ID.</li>
-    <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta y un cuerpo JSON con los detalles actualizados.</li>
-    <li><strong>Ejemplo de solicitud:</strong>
-      <pre>
+  <details>
+    <summary><code>PUT /actividades/:id</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Actualizar una actividad existente por ID.</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la ruta y un cuerpo JSON con los
+        detalles actualizados.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
         {
           "nombre_actividad": "Taller de Desarrollo Web",
           "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
@@ -416,10 +510,54 @@
           "observaciones": "Se requiere que los estudiantes traigan laptop."
         }
       </pre>
-    </li>
-  </ul>
-</details>
+      </li>
+    </ul>
+  </details>
 
+  <details>
+    <summary><code>PATCH /actividades/:id/estado</code></summary>
+    <ul>
+      <li><strong>Descripción:</strong> Actualizar el estado de una actividad.</li>
+      <li><strong>Instrucciones:</strong> Proporcionar el ID de la actividad en la URL y el nuevo estado en el cuerpo de
+        la solicitud. El estado puede ser "En revisión", "Aprobado" o "Rechazado".</li>
+      <li><strong>Ejemplo de solicitud:</strong></li>
+      <pre>
+Solo se debe enviar un estado de los tres posibles:
+
+{
+"estado": 'En revision' o 'Aprobado' o 'Rechazado'
+}
+</pre>
+      <li><strong>Ejemplo de respuesta exitosa:</strong></li>
+      <pre>
+{
+"message": "Estado de la actividad actualizado exitosamente"
+}
+</pre>
+      <li><strong>Errores posibles:</strong></li>
+      <ul>
+        <li><strong>400 Bad Request:</strong></li>
+        <pre>
+{
+"error": "Estado no válido"
+}
+</pre>
+        <li><strong>404 Not Found:</strong></li>
+        <pre>
+{
+"error": "Actividad no encontrada"
+}
+</pre>
+        <li><strong>500 Internal Server Error:</strong></li>
+        <pre>
+{
+"error": "Error al actualizar el estado de la actividad"
+}
+</pre>
+      </ul>
+    </ul>
+
+  </details>
 
   <h2>Endpoints de ActividadesParticipantes</h2>
 
@@ -540,7 +678,8 @@
     <ul>
       <li><strong>Descripción:</strong> Añadir un participante a una actividad.</li>
       <li><strong>Instrucciones:</strong> Requiere un cuerpo JSON con los campos <code>id_usuario</code> e
-        <code>id_actividad</code>.</li>
+        <code>id_actividad</code>.
+      </li>
       <li><strong>Ejemplo de solicitud:</strong>
         <pre>
         {
@@ -561,43 +700,44 @@
   <details>
     <summary><code>PUT /actividades-participantes</code></summary>
     <ul>
-        <li><strong>Descripción:</strong> Elimina la participación de un usuario específico en una actividad.</li>
-        <li><strong>Instrucciones:</strong> El cuerpo de la solicitud debe incluir el `id_usuario` y `id_actividad` para identificar al usuario y la actividad.</li>
-        <li><strong>Ejemplo de solicitud:</strong>
-            <pre>
+      <li><strong>Descripción:</strong> Elimina la participación de un usuario específico en una actividad.</li>
+      <li><strong>Instrucciones:</strong> El cuerpo de la solicitud debe incluir el `id_usuario` y `id_actividad` para
+        identificar al usuario y la actividad.</li>
+      <li><strong>Ejemplo de solicitud:</strong>
+        <pre>
 {
   "id_usuario": 3,
   "id_actividad": 2
 }
             </pre>
-        </li>
-        <li><strong>Ejemplo de respuesta:</strong>
-            <pre>
+      </li>
+      <li><strong>Ejemplo de respuesta:</strong>
+        <pre>
 {
   "message": "Participación eliminada exitosamente"
 }
             </pre>
-        </li>
-        <li><strong>Posibles respuestas de error:</strong>
-            <ul>
-                <li><strong>400 Bad Request:</strong>
-                    <pre>
+      </li>
+      <li><strong>Posibles respuestas de error:</strong>
+        <ul>
+          <li><strong>400 Bad Request:</strong>
+            <pre>
 {
   "error": "id_usuario e id_actividad son requeridos"
 }
                     </pre>
-                </li>
-                <li><strong>404 Not Found:</strong>
-                    <pre>
+          </li>
+          <li><strong>404 Not Found:</strong>
+            <pre>
 {
   "error": "Participación no encontrada"
 }
                     </pre>
-                </li>
-            </ul>
-        </li>
+          </li>
+        </ul>
+      </li>
     </ul>
-</details>
+  </details>
 
 
 </body>

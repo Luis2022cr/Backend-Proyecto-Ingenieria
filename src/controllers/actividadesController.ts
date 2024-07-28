@@ -231,3 +231,35 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
         res.status(500).json({ error: 'Error al actualizar la actividad' });
     }
 };
+
+// Actualizar el estado de una actividad
+export const updateEstadoActividad = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { estado } = req.body;
+
+        // Verificar que el estado sea uno de los permitidos
+        const validEstados = ['En revision', 'Aprobado', 'Rechazado'];
+        if (!validEstados.includes(estado)) {
+            res.status(400).json({ error: 'Estado no válido' });
+            return;
+        }
+
+        const query = `
+            UPDATE Actividades
+            SET estado_id = (
+                SELECT id FROM Estados WHERE nombre = ?
+            )
+            WHERE id = ?`;
+
+        await client.execute({
+            sql: query, 
+            args: [estado, id]
+        });
+
+        res.status(200).json({ message: 'Estado de la actividad actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar el estado de la actividad:', error);
+        res.status(500).json({ error: 'Error al actualizar el estado de la actividad' });
+    }
+};
