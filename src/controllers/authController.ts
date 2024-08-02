@@ -55,6 +55,19 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        // Verificar si ya existe un usuario con el rol 2 en la misma carrera
+        if (role_id === 2) {
+            const checkRoleInCarrera = await client.execute({
+                sql: 'SELECT * FROM Usuarios WHERE role_id = ? AND carrera_id = ?',
+                args: [role_id, carrera_id]
+            });
+
+            if (checkRoleInCarrera.rows.length > 0) {
+                res.status(400).json({ error: 'Ya existe un usuario con este rol en esta carrera' });
+                return;
+            }
+        }
+
         // Encriptar la contraseña
         const hashedPassword = await bcrypt.hash(contrasena, 10);
 
