@@ -103,9 +103,7 @@ export const createActividad = async (req: Request, res: Response): Promise<void
             actividades_principales,
             descripcion,
             ubicacion,
-            carrera_id,
             ambito_id,
-            coordinador_id,
             estudiante_id,
             horas_art140,
             cupos,
@@ -120,7 +118,36 @@ export const createActividad = async (req: Request, res: Response): Promise<void
         
         const estado_id = 1;
         const informe = null; // O define una cadena vacía si es necesario
- 
+
+        // Obtener información del usuario
+        const usuarioResult = await client.execute({
+            sql: 'SELECT carrera_id FROM Usuarios WHERE id = ?',
+            args: [estudiante_id]
+        });
+        const usuario = usuarioResult.rows[0];
+
+        if (!usuario) {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+            return;
+        }
+
+        const { carrera_id } = usuario;
+
+        // Obtener el coordinador de la carrera
+        const coordinadorResult = await client.execute({
+            sql: 'SELECT id AS coordinador_id FROM Usuarios WHERE carrera_id = ? AND role_id = 2',
+            args: [carrera_id]
+        });
+        const coordinador = coordinadorResult.rows[0];
+
+        if (!coordinador) {
+            res.status(404).json({ error: 'Coordinador no encontrado para la carrera especificada' });
+            return;
+        }
+
+        const { coordinador_id } = coordinador;
+
+        // Insertar la nueva actividad
         await client.execute({
             sql: `
                 INSERT INTO Actividades (
@@ -159,7 +186,7 @@ export const createActividad = async (req: Request, res: Response): Promise<void
     }
 };
 
-// Actualizar una actividad
+// Actualizar una actividad existente
 export const updateActividad = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -169,9 +196,7 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
             actividades_principales,
             descripcion,
             ubicacion,
-            carrera_id,
             ambito_id,
-            coordinador_id,
             estudiante_id,
             horas_art140,
             cupos,
@@ -181,34 +206,70 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
             observaciones
         } = req.body;
 
-        const query = `
-            UPDATE Actividades
-            SET 
-                nombre_actividad = ?, 
-                descripcion = ?, 
-                objetivos = ?, 
-                actividades_principales = ?, 
-                ubicacion = ?, 
-                carrera_id = ?, 
-                ambito_id = ?, 
-                coordinador_id = ?, 
-                estudiante_id = ?, 
-                horas_art140 = ?, 
-                cupos = ?, 
-                cupos_disponibles = ?, 
-                fecha = ?, 
-                hora_inicio = ?, 
-                hora_final = ?, 
-                observaciones = ?
-            WHERE id = ?`;
+        const timezone = 'America/Tegucigalpa'; // Ajusta la zona horaria según tu ubicación
+        const fecha_entrega = moment().tz(timezone).format();
 
+        const estado_id = 1;
+        const informe = null; // O define una cadena vacía si es necesario
+
+        // Obtener información del usuario
+        const usuarioResult = await client.execute({
+            sql: 'SELECT carrera_id FROM Usuarios WHERE id = ?',
+            args: [estudiante_id]
+        });
+        const usuario = usuarioResult.rows[0];
+
+        if (!usuario) {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+            return;
+        }
+
+        const { carrera_id } = usuario;
+
+        // Obtener el coordinador de la carrera
+        const coordinadorResult = await client.execute({
+            sql: 'SELECT id AS coordinador_id FROM Usuarios WHERE carrera_id = ? AND role_id = 2',
+            args: [carrera_id]
+        });
+        const coordinador = coordinadorResult.rows[0];
+
+        if (!coordinador) {
+            res.status(404).json({ error: 'Coordinador no encontrado para la carrera especificada' });
+            return;
+        }
+
+        const { coordinador_id } = coordinador;
+
+        // Actualizar la actividad existente
         await client.execute({
-            sql: query, 
+            sql: `
+                UPDATE Actividades
+                SET 
+                    nombre_actividad = ?, 
+                    objetivos = ?, 
+                    actividades_principales = ?, 
+                    descripcion = ?, 
+                    ubicacion = ?, 
+                    carrera_id = ?, 
+                    ambito_id = ?, 
+                    coordinador_id = ?, 
+                    estudiante_id = ?, 
+                    horas_art140 = ?, 
+                    cupos = ?, 
+                    cupos_disponibles = ?, 
+                    fecha = ?, 
+                    hora_inicio = ?, 
+                    hora_final = ?, 
+                    fecha_entrega = ?, 
+                    estado_id = ?, 
+                    observaciones = ?, 
+                    informe = ?
+                WHERE id = ?`,
             args: [
                 nombre_actividad,
-                descripcion,
                 objetivos,
                 actividades_principales,
+                descripcion,
                 ubicacion,
                 carrera_id,
                 ambito_id,
@@ -216,11 +277,14 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
                 estudiante_id,
                 horas_art140,
                 cupos,
-                cupos, 
+                cupos, // Se utiliza `cupos` como `cupos_disponibles`
                 fecha,
                 hora_inicio,
                 hora_final,
+                fecha_entrega,
+                estado_id,
                 observaciones,
+                informe,
                 id
             ]
         });
@@ -231,6 +295,7 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
         res.status(500).json({ error: 'Error al actualizar la actividad' });
     }
 };
+
 
 // Actualizar el estado de una actividad
 export const updateEstadoActividad = async (req: Request, res: Response): Promise<void> => {
