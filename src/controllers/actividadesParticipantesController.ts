@@ -135,17 +135,30 @@ export const addParticipante = async (req: Request, res: Response): Promise<void
             return;
         }
 
-        const query = `
+        // Insertar el participante en la actividad
+        const insertQuery = `
             INSERT INTO ActividadesParticipantes (id_usuario, id_actividad) 
             VALUES (?, ?)
         `;
 
         await client.execute({
-            sql: query,
+            sql: insertQuery,
             args: [id_usuario, id_actividad]
         });
 
-        res.status(200).json({ message: 'Participante agregado exitosamente' });
+        // Actualizar los cupos disponibles
+        const updateCuposQuery = `
+            UPDATE Actividades
+            SET cupos_disponibles = cupos_disponibles - 1
+            WHERE id = ?
+        `;
+
+        await client.execute({
+            sql: updateCuposQuery,
+            args: [id_actividad]
+        });
+
+        res.status(200).json({ message: 'Participante agregado exitosamente y cupos actualizados' });
     } catch (error) {
         console.error('Error al agregar el participante:', error);
         res.status(500).json({ error: 'Error al agregar el participante' });
@@ -153,33 +166,46 @@ export const addParticipante = async (req: Request, res: Response): Promise<void
 };
 
 
+
 // Eliminar la participación de un usuario en una actividad
 export const removeParticipante = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id_usuario, id_actividad } = req.body;
 
-        // Verificar que se proporcionen ambos parámetros
         if (!id_usuario || !id_actividad) {
             res.status(400).json({ error: 'id_usuario e id_actividad son requeridos' });
             return;
         }
 
         // Ejecutar la consulta para eliminar al usuario de la actividad
+        const deleteQuery = `
+            DELETE FROM ActividadesParticipantes
+            WHERE id_usuario = ? AND id_actividad = ?
+        `;
+
         const resultado = await client.execute({
-            sql: `
-                DELETE FROM ActividadesParticipantes
-                WHERE id_usuario = ? AND id_actividad = ?
-            `,
+            sql: deleteQuery,
             args: [id_usuario, id_actividad]
         });
 
-        // Verificar si se eliminó alguna fila
         if (resultado.rowsAffected === 0) {
             res.status(404).json({ error: 'Participación no encontrada' });
             return;
         }
 
-        res.status(200).json({ message: 'Participación eliminada exitosamente' });
+        // Actualizar los cupos disponibles
+        const updateCuposQuery = `
+            UPDATE Actividades
+            SET cupos_disponibles = cupos_disponibles + 1
+            WHERE id = ?
+        `;
+
+        await client.execute({
+            sql: updateCuposQuery,
+            args: [id_actividad]
+        });
+
+        res.status(200).json({ message: 'Participación eliminada exitosamente y cupos actualizados' });
     } catch (error) {
         console.error('Error al eliminar la participación del usuario:', error);
         res.status(500).json({ error: 'Error al eliminar la participación del usuario' });
