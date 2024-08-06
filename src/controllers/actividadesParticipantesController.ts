@@ -73,7 +73,7 @@ export const getActividadesByUsuario = async (req: Request, res: Response): Prom
             FROM ActividadesParticipantes AP
             JOIN Actividades A ON AP.id_actividad = A.id
             JOIN Usuarios U ON AP.id_usuario = U.id
-            WHERE AP.id_usuario = ?
+            WHERE AP.id_usuario = ? AND A.estado_id = 4
         `;
 
         const resultado = await client.execute({
@@ -82,7 +82,7 @@ export const getActividadesByUsuario = async (req: Request, res: Response): Prom
         });
 
         if (resultado.rows.length === 0) {
-            res.status(404).json({ error: 'No se encontraron actividades para este usuario' });
+            res.status(404).json({ error: 'No se encontraron actividades para este usuario con el estado especificado' });
             return;
         }
 
@@ -122,7 +122,6 @@ export const getActividadesByUsuario = async (req: Request, res: Response): Prom
         res.status(500).json({ error: 'Error al obtener las actividades del usuario' });
     }
 };
-
 
 
 // Añadir un participante a una actividad

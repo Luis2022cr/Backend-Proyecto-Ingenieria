@@ -26,9 +26,12 @@ interface Actividad {
 }
 
 // Obtener todas las actividades
+
 export const getActividades = async (req: Request, res: Response): Promise<void> => {
     try {
-        const query = `
+        const { estado } = req.query;
+
+        let query = `
             SELECT 
                 A.id, 
                 A.nombre_actividad, 
@@ -56,10 +59,19 @@ export const getActividades = async (req: Request, res: Response): Promise<void>
             LEFT JOIN Usuarios UC ON A.coordinador_id = UC.id
             LEFT JOIN Usuarios UE ON A.estudiante_id = UE.id
             LEFT JOIN Estados E ON A.estado_id = E.id
-            ORDER BY A.id DESC;
         `;
 
-        const resultado = await client.execute(query);
+        const queryParams: any[] = [];
+
+        // Verificar si hay un filtro de estado
+        if (estado) {
+            query += ` WHERE A.estado_id = ?`;
+            queryParams.push(estado);
+        }
+
+        query += ` ORDER BY A.id DESC;`;
+
+        const resultado = await client.execute({ sql: query, args: queryParams });
 
         if (Array.isArray(resultado.rows)) {
             const formattedData: Actividad[] = resultado.rows.map((row: any) => ({
@@ -94,6 +106,7 @@ export const getActividades = async (req: Request, res: Response): Promise<void>
     }
 };
 
+
 // Crear una nueva actividad
 export const createActividad = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -110,7 +123,7 @@ export const createActividad = async (req: Request, res: Response): Promise<void
             fecha,
             hora_inicio,
             hora_final,
-            observaciones
+            observaciones = ''
         } = req.body;
 
         const timezone = 'America/Tegucigalpa'; // Ajusta la zona horaria según tu ubicación
@@ -339,3 +352,25 @@ export const updateEstadoActividad = async (req: Request, res: Response): Promis
         res.status(500).json({ error: 'Error al actualizar el estado de la actividad' });
     }
 };
+
+
+export const updateEstadoFinalizado = async (): Promise<void> => {
+    try {
+        // Consulta para actualizar las actividades cuyo estado debe cambiar a 'Finalizado'
+        const query = `
+            UPDATE Actividades
+            SET estado_id = 4
+            WHERE fecha < CURRENT_DATE AND estado_id <> 4
+        `;
+
+        await client.execute({
+            sql: query,
+            args: []
+        });
+
+        console.log('Estado de las actividades actualizado a Finalizado');
+    } catch (error) {
+        console.error('Error al actualizar el estado de las actividades:', error);
+    }
+};
+

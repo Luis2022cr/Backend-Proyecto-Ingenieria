@@ -7,7 +7,8 @@ import path from 'path';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import slowDown from 'express-slow-down';
-
+import { updateEstadoFinalizado } from './controllers/actividadesController';
+const cron = require('node-cron');
 dotenv.config();
 
 const app: Application = express();
@@ -57,6 +58,13 @@ app.use(cors({
 app.use(express.json());
 
 const upload = multer(); // Configuración básica de multer para manejar archivos
+
+//Ejecutar el updateEstado automaticamente con el 'cron'
+cron.schedule('0 0 * * *', () => {
+  updateEstadoFinalizado()
+      .then(() => console.log('Estado de las actividades actualizado a Finalizado'))
+      .catch(error => console.error('Error al actualizar el estado de las actividades:', error));
+});
 
 app.use('/api', upload.single('imagen'), routes); // Agrega el middleware de multer antes de las rutas
 

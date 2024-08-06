@@ -421,39 +421,73 @@ Content-Type: application/json
   <details>
     <summary><code>GET /actividades</code></summary>
     <ul>
-      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades.</li>
-      <li><strong>Instrucciones:</strong> No requiere parámetros ni cuerpo en la solicitud.</li>
-      <li><strong>Ejemplo de respuesta:</strong>
-        <pre>
+        <li><strong>Descripción:</strong> Obtener una lista de todas las actividades. Puedes filtrar las actividades por estado utilizando el parámetro de consulta <code>estado</code>. Los valores posibles para <code>estado</code> son:
+            <ul>
+                <li><code>1</code> - En revisión</li>
+                <li><code>2</code> - Aprobado</li>
+                <li><code>3</code> - Rechazado</li>
+            </ul>
+        </li>
+        <li><strong>Instrucciones:</strong> Utiliza el parámetro de consulta <code>estado</code> para filtrar los resultados. Por ejemplo, para obtener actividades con estado "Aprobado", la solicitud debería ser <code>/api/actividades?estado=2</code>. Si no se proporciona el parámetro <code>estado</code>, se devolverán todas las actividades.</li>
+        <li><strong>Ejemplo de solicitud:</strong></li>
+        <pre><code>
+Para obtener todas las actividades:
+GET /actividades
+
+Para obtener actividades con estado "En Revisión":
+GET /actividades?estado=1
+
+Para obtener actividades con estado "Aprobado":
+GET /actividades?estado=2
+
+Para obtener actividades con estado "Rechazado":
+GET /actividades?estado=3
+        </code></pre>
+        <li><strong>Ejemplo de respuesta:</strong></li>
+        <pre><code>
 [
-  {
-    "id": 4,
-    "nombre_actividad": "Nueva Actividad",
-    "objetivos": "Objetivo de la actividad",
-    "actividades_principales": "Actividades principales",
-    "descripcion": "Descripción de la actividad",
-    "ubicacion": "Ubicación de la actividad",
-    "carrera": "Ingeniería en Sistemas",
-    "ambito": "Deportivo",
-    "coordinador": "María González",
-    "estudiante": "Juan Pérez",
-    "horas_art140": 10,
-    "cupos": 20,
-    "cupos_disponibles": 20,
-    "fecha": "2024-07-21T00:00:00.000Z",
-    "hora_inicio": "08:00",
-    "hora_final": "10:00",
-    "fecha_entrega": "2024-07-22T04:39:00.467Z",
-    "estado": "En Revisión",
-    "observaciones": "Observaciones",
-    "informe": null
-  },
-  ...
+    {
+        "id": 4,
+        "nombre_actividad": "Nueva Actividad",
+        "objetivos": "Objetivo de la actividad",
+        "actividades_principales": "Actividades principales",
+        "descripcion": "Descripción de la actividad",
+        "ubicacion": "Ubicación de la actividad",
+        "carrera": "Ingeniería en Sistemas",
+        "ambito": "Deportivo",
+        "coordinador": "María González",
+        "estudiante": "Juan Pérez",
+        "horas_art140": 10,
+        "cupos": 20,
+        "cupos_disponibles": 20,
+        "fecha": "2024-07-21T00:00:00.000Z",
+        "hora_inicio": "08:00",
+        "hora_final": "10:00",
+        "fecha_entrega": "2024-07-22T04:39:00.467Z",
+        "estado": "En Revisión",
+        "observaciones": "Observaciones",
+        "informe": null
+    },
+    ...
 ]
-      </pre>
-      </li>
+        </code></pre>
+        <li><strong>Errores posibles:</strong></li>
+        <ul>
+            <li><strong>400 Bad Request:</strong> Si el valor del parámetro <code>estado</code> no es válido.
+            <pre><code>
+{
+    "error": "Estado no válido"
+}
+            </code></pre></li>
+            <li><strong>500 Internal Server Error:</strong> En caso de error en la base de datos o en el servidor.
+            <pre><code>
+{
+    "error": "Error al obtener las actividades"
+}
+            </code></pre></li>
+        </ul>
     </ul>
-  </details>
+</details>
 
   <details>
     <summary><code>POST /actividades</code></summary>
@@ -620,70 +654,69 @@ o
   <details>
     <summary><code>GET /usuarios/:id/actividades</code></summary>
     <ul>
-      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades en las que un usuario específico está
-        participando.</li>
-      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar el usuario.
-      </li>
+      <li><strong>Descripción:</strong> Obtener una lista de todas las actividades en las que un usuario específico está participando, filtrando por el estado con ID 4(finalizado).</li>
+      <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar el usuario. La respuesta incluirá solo las actividades cuyo estado es 4 (finalizado).</li>
       <li><strong>Ejemplo de respuesta:</strong>
         <pre>
         [
-        {
-          "id": 20182100278,
-          "nombre": "Jose Luis",
-          "apellido": "Contreras",
-          "correo_institucional": "jcontreras@unah.hn",
-          "actividades": [
-            {
-              "id": 1,
-              "nombre_actividad": "Taller ",
-              "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
-              "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
-              "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
-              "ubicacion": "Aula 101, Edificio Central",
-              "carrera_id": 2,
-              "ambito_id": 3,
-              "coordinador_id": 1,
-              "estudiante_id": 5,
-              "horas_art140": 20,
-              "cupos": 30,
-              "cupos_disponibles": 30,
-              "fecha": "2024-08-01T09:00:00",
-              "hora_inicio": "09:00",
-              "hora_final": "17:00",
-              "fecha_entrega": "2024-07-25T16:29:23-06:00",
-              "estado_id": 1,
-              "observaciones": "Se requiere que los estudiantes traigan laptop.",
-              "informe": null
-            },
-            {
-              "id": 2,
-              "nombre_actividad": "Taller de Desarrollo Web",
-              "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
-              "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
-              "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
-              "ubicacion": "Aula 101, Edificio Central",
-              "carrera_id": 2,
-              "ambito_id": 3,
-              "coordinador_id": 1,
-              "estudiante_id": 5,
-              "horas_art140": 20,
-              "cupos": 30,
-              "cupos_disponibles": 30,
-              "fecha": "2024-08-01T09:00:00",
-              "hora_inicio": "09:00",
-              "hora_final": "17:00",
-              "fecha_entrega": "2024-07-25T16:29:26-06:00",
-              "estado_id": 1,
-              "observaciones": "Se requiere que los estudiantes traigan laptop.",
-              "informe": null
-            },
-            .............
+          {
+            "id": 20182100278,
+            "nombre": "Jose Luis",
+            "apellido": "Contreras",
+            "correo_institucional": "jcontreras@unah.hn",
+            "actividades": [
+              {
+                "id": 1,
+                "nombre_actividad": "Taller de Desarrollo Web",
+                "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+                "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+                "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+                "ubicacion": "Aula 101, Edificio Central",
+                "carrera_id": 2,
+                "ambito_id": 3,
+                "coordinador_id": 1,
+                "estudiante_id": 5,
+                "horas_art140": 20,
+                "cupos": 30,
+                "cupos_disponibles": 30,
+                "fecha": "2024-08-01T09:00:00",
+                "hora_inicio": "09:00",
+                "hora_final": "17:00",
+                "fecha_entrega": "2024-07-25T16:29:23-06:00",
+                "estado_id": 4,
+                "observaciones": "Se requiere que los estudiantes traigan laptop.",
+                "informe": null
+              },
+              {
+                "id": 2,
+                "nombre_actividad": "Taller de Desarrollo Web Avanzado",
+                "objetivos": "Profundizar en técnicas avanzadas de desarrollo web.",
+                "actividades_principales": "Clases avanzadas sobre frameworks modernos.",
+                "descripcion": "Clases avanzadas sobre frameworks modernos como React y Angular.",
+                "ubicacion": "Aula 102, Edificio Central",
+                "carrera_id": 2,
+                "ambito_id": 3,
+                "coordinador_id": 1,
+                "estudiante_id": 5,
+                "horas_art140": 20,
+                "cupos": 30,
+                "cupos_disponibles": 25,
+                "fecha": "2024-09-01T09:00:00",
+                "hora_inicio": "10:00",
+                "hora_final": "18:00",
+                "fecha_entrega": "2024-08-25T16:29:26-06:00",
+                "estado_id": 4,
+                "observaciones": "Material adicional será proporcionado.",
+                "informe": null
+              }
+            ]
           }
         ]
-      </pre>
+        </pre>
       </li>
     </ul>
-  </details>
+</details>
+
 
   <details>
     <summary><code>POST /participantes</code></summary>
