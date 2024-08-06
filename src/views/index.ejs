@@ -515,47 +515,61 @@ Content-Type: application/json
   <details>
     <summary><code>PATCH /actividades/:id/estado</code></summary>
     <ul>
-      <li><strong>Descripción:</strong> Actualizar el estado de una actividad.</li>
-      <li><strong>Instrucciones:</strong> Proporcionar el ID de la actividad en la URL y el nuevo estado en el cuerpo de
-        la solicitud. El estado puede ser "En revisión", "Aprobado" o "Rechazado".</li>
-      <li><strong>Ejemplo de solicitud:</strong></li>
-      <pre>
+        <li><strong>Descripción:</strong> Actualizar el estado de una actividad.</li>
+        <li><strong>Instrucciones:</strong> Proporcionar el ID de la actividad en la URL y el nuevo estado en el cuerpo de la solicitud. El estado puede ser <code>1</code> (En revisión), <code>2</code> (Aprobado) o <code>3</code> (Rechazado). Si el estado es <code>3</code> (Rechazado), es obligatorio proporcionar una observación.</li>
+        <li><strong>Ejemplo de solicitud:</strong></li>
+        <pre><code>
 Solo se debe enviar un estado de los tres posibles:
 
 {
-"estado": 'En revision' o 'Aprobado' o 'Rechazado'
+  "estado": 1
 }
-</pre>
-      <li><strong>Ejemplo de respuesta exitosa:</strong></li>
-      <pre>
+o
 {
-"message": "Estado de la actividad actualizado exitosamente"
+  "estado": 2
 }
-</pre>
-      <li><strong>Errores posibles:</strong></li>
-      <ul>
-        <li><strong>400 Bad Request:</strong></li>
-        <pre>
+o
 {
-"error": "Estado no válido"
+  "estado": 3,
+  "observacion": "Explicación detallada del rechazo"
 }
-</pre>
-        <li><strong>404 Not Found:</strong></li>
-        <pre>
+        </code></pre>
+        <li><strong>Ejemplo de respuesta exitosa:</strong></li>
+        <pre><code>
 {
-"error": "Actividad no encontrada"
+  "message": "Estado de la actividad actualizado exitosamente"
 }
-</pre>
-        <li><strong>500 Internal Server Error:</strong></li>
-        <pre>
+        </code></pre>
+        <li><strong>Errores posibles:</strong></li>
+        <ul>
+            <li><strong style="color:red">400 Bad Request:</strong></li>
+            <pre><code>
 {
-"error": "Error al actualizar el estado de la actividad"
+  "error": "Estado no válido"
 }
-</pre>
-      </ul>
+            </code></pre>
+            <li><strong style="color:red">400 Bad Request:</strong></li>
+            <pre><code>
+{
+  "error": "La observación es obligatoria cuando el estado es Rechazado"
+}
+            </code></pre>
+            <li><strong style="color:red">404 Not Found:</strong></li>
+            <pre><code>
+{
+  "error": "Actividad no encontrada"
+}
+            </code></pre>
+            <li><strong style="color:red">500 Internal Server Error:</strong></li>
+            <pre><code>
+{
+  "error": "Error al actualizar el estado de la actividad"
+}
+            </code></pre>
+        </ul>
     </ul>
+</details>
 
-  </details>
 
   <h2>Endpoints de ActividadesParticipantes</h2>
 

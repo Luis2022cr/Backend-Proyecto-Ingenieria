@@ -296,30 +296,41 @@ export const updateActividad = async (req: Request, res: Response): Promise<void
     }
 };
 
-
 // Actualizar el estado de una actividad
 export const updateEstadoActividad = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const { estado } = req.body;
+        const { estado, observacion } = req.body;
 
         // Verificar que el estado sea uno de los permitidos
-        const validEstados = ['En revision', 'Aprobado', 'Rechazado'];
+        const validEstados = [1, 2, 3]; // 1: En revisión, 2: Aprobado, 3: Rechazado
         if (!validEstados.includes(estado)) {
             res.status(400).json({ error: 'Estado no válido' });
             return;
         }
 
-        const query = `
+        // Si el estado es "Rechazado" (3), la observación es obligatoria
+        if (estado === 3 && !observacion) {
+            res.status(400).json({ error: 'La observación es obligatoria cuando el estado es Rechazado' });
+            return;
+        }
+
+        let query = `
             UPDATE Actividades
-            SET estado_id = (
-                SELECT id FROM Estados WHERE nombre = ?
-            )
-            WHERE id = ?`;
+            SET estado_id = ?`;
+
+        let args = [estado, id];
+
+        if (estado === 3) {
+            query += `, observaciones = ?`;
+            args = [estado, observacion, id];
+        }
+
+        query += ` WHERE id = ?`;
 
         await client.execute({
-            sql: query, 
-            args: [estado, id]
+            sql: query,
+            args: args
         });
 
         res.status(200).json({ message: 'Estado de la actividad actualizado exitosamente' });
