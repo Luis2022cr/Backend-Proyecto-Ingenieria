@@ -210,3 +210,66 @@ export const removeParticipante = async (req: Request, res: Response): Promise<v
         res.status(500).json({ error: 'Error al eliminar la participación del usuario' });
     }
 };
+
+export const getActividadesByUsuarioUnido = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const query = `
+            SELECT 
+                U.id AS usuario_id,
+                U.nombre AS usuario_nombre,
+                U.apellido AS usuario_apellido,
+                U.correo_institucional AS usuario_correo,
+                A.*
+            FROM ActividadesParticipantes AP
+            JOIN Actividades A ON AP.id_actividad = A.id
+            JOIN Usuarios U ON AP.id_usuario = U.id
+        `;
+
+        const resultado = await client.execute({
+            sql: query,
+            args: [id]
+        });
+
+        if (resultado.rows.length === 0) {
+            res.status(404).json({ error: 'No se encontraron actividades para este usuario con el estado especificado' });
+            return;
+        }
+
+        // Construir el objeto de usuario con sus actividades
+        const usuario = {
+            id: resultado.rows[0].usuario_id,
+            nombre: resultado.rows[0].usuario_nombre,
+            apellido: resultado.rows[0].usuario_apellido,
+            correo_institucional: resultado.rows[0].usuario_correo,
+            actividades: resultado.rows.map((row: any) => ({
+                id: row.id,
+                nombre_actividad: row.nombre_actividad,
+                objetivos: row.objetivos,
+                actividades_principales: row.actividades_principales,
+                descripcion: row.descripcion,
+                ubicacion: row.ubicacion,
+                carrera_id: row.carrera_id,
+                ambito_id: row.ambito_id,
+                coordinador_id: row.coordinador_id,
+                estudiante_id: row.estudiante_id,
+                horas_art140: row.horas_art140,
+                cupos: row.cupos,
+                cupos_disponibles: row.cupos_disponibles,
+                fecha: row.fecha,
+                hora_inicio: row.hora_inicio,
+                hora_final: row.hora_final,
+                fecha_entrega: row.fecha_entrega,
+                estado_id: row.estado_id,
+                observaciones: row.observaciones,
+                informe: row.informe
+            }))
+        };
+
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error('Error al obtener las actividades del usuario:', error);
+        res.status(500).json({ error: 'Error al obtener las actividades del usuario' });
+    }
+};

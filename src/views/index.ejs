@@ -652,7 +652,7 @@ o
   </details>
 
   <details>
-    <summary><code>GET /usuarios/:id/actividades</code></summary>
+    <summary><code>GET /usuarios/:id/finalizado</code></summary>
     <ul>
       <li><strong>Descripción:</strong> Obtener una lista de todas las actividades en las que un usuario específico está participando, filtrando por el estado con ID 4(finalizado).</li>
       <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar el usuario. La respuesta incluirá solo las actividades cuyo estado es 4 (finalizado).</li>
@@ -717,6 +717,71 @@ o
     </ul>
 </details>
 
+<details>
+  <summary><code>GET /usuarios/:id/unido</code></summary>
+  <ul>
+    <li><strong>Descripción:</strong> Obtener una lista de todas las actividades en las que un usuario específico está participando.</li>
+    <li><strong>Instrucciones:</strong> Requiere el parámetro <code>id</code> en la URL para identificar el usuario.</li>
+    <li><strong>Ejemplo de respuesta:</strong>
+      <pre>
+      [
+        {
+          "id": 20182100278,
+          "nombre": "Jose Luis",
+          "apellido": "Contreras",
+          "correo_institucional": "jcontreras@unah.hn",
+          "actividades": [
+            {
+              "id": 1,
+              "nombre_actividad": "Taller de Desarrollo Web",
+              "objetivos": "Aprender las bases del desarrollo web utilizando tecnologías modernas.",
+              "actividades_principales": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "descripcion": "Clases teóricas y prácticas sobre HTML, CSS, y JavaScript.",
+              "ubicacion": "Aula 101, Edificio Central",
+              "carrera_id": 2,
+              "ambito_id": 3,
+              "coordinador_id": 1,
+              "estudiante_id": 5,
+              "horas_art140": 20,
+              "cupos": 30,
+              "cupos_disponibles": 30,
+              "fecha": "2024-08-01T09:00:00",
+              "hora_inicio": "09:00",
+              "hora_final": "17:00",
+              "fecha_entrega": "2024-07-25T16:29:23-06:00",
+              "estado_id": 4,
+              "observaciones": "Se requiere que los estudiantes traigan laptop.",
+              "informe": null
+            },
+            {
+              "id": 2,
+              "nombre_actividad": "Taller de Desarrollo Web Avanzado",
+              "objetivos": "Profundizar en técnicas avanzadas de desarrollo web.",
+              "actividades_principales": "Clases avanzadas sobre frameworks modernos.",
+              "descripcion": "Clases avanzadas sobre frameworks modernos como React y Angular.",
+              "ubicacion": "Aula 102, Edificio Central",
+              "carrera_id": 2,
+              "ambito_id": 3,
+              "coordinador_id": 1,
+              "estudiante_id": 5,
+              "horas_art140": 20,
+              "cupos": 30,
+              "cupos_disponibles": 25,
+              "fecha": "2024-09-01T09:00:00",
+              "hora_inicio": "10:00",
+              "hora_final": "18:00",
+              "fecha_entrega": "2024-08-25T16:29:26-06:00",
+              "estado_id": 4,
+              "observaciones": "Material adicional será proporcionado.",
+              "informe": null
+            }
+          ]
+        }
+      ]
+      </pre>
+    </li>
+  </ul>
+</details>
 
   <details>
     <summary><code>POST /participantes</code></summary>
