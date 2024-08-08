@@ -225,6 +225,7 @@ export const getActividadesByUsuarioUnido = async (req: Request, res: Response):
             FROM ActividadesParticipantes AP
             JOIN Actividades A ON AP.id_actividad = A.id
             JOIN Usuarios U ON AP.id_usuario = U.id
+            WHERE U.id = ?
         `;
 
         const resultado = await client.execute({
